@@ -6,7 +6,7 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 16:51:10 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/07 17:46:29 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/07 20:32:51 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 int main(int argc, char* argv[]) {
   if (argc <= 1) {
-    std::cerr << "Usage: " << argv[0] << " num1 num2 num3 ... numN" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " No arguments " << std::endl;
     return 1;
   }
 

@@ -6,7 +6,7 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 16:51:02 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/07 19:10:46 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/07 20:31:29 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ PmergeMe::PmergeMe(const std::vector<int>& nums) : nums_(nums), list_nums_(nums.
   for (int i = 0; i < nums_.size(); i++) {
     if (nums_[i] <= 0) {
       // Afficher un message d'erreur sur la sortie d'erreur standard si un entier négatif est trouvé
-      std::cerr << "Erreur : tous les entiers doivent être positifs." << std::endl;
+      std::cerr << "Erreur" << std::endl;
       // Terminer le programme immédiatement
       exit(1);
     }
