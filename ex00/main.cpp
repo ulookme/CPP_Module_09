@@ -6,7 +6,7 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:16:20 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/07 14:51:55 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/14 15:01:08 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     BitcoinExchange exchange;
 
     // Charge les taux de change à partir d'un fichier
-    exchange.loadExchangeRates("change.txt");
+    exchange.loadExchangeRates("data.csv");
 
     // Évalue les valeurs à partir d'un autre fichier
     exchange.evaluateValues(argv[1]);

@@ -6,15 +6,18 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:16:24 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/07 15:19:32 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/14 16:59:26 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
 #include "BitcoinExchange.hpp"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <map>
+#include <regex>
 
+//using namespace std;
 // Implémente le constructeur par défaut
 BitcoinExchange::BitcoinExchange() {
 }
@@ -23,75 +26,76 @@ BitcoinExchange::BitcoinExchange() {
 BitcoinExchange::~BitcoinExchange() {
 }
 
-// Charge les taux de change depuis un fichier
+
 void BitcoinExchange::loadExchangeRates(const std::string &filename) {
-    // Ouvre le fichier en lecture
-    std::ifstream file(filename);
-    std::string line;
-
-    // Ignore la première ligne (en-tête)
-    std::getline(file, line);
-
-    // Lit chaque ligne restante dans le fichier
-    while (std::getline(file, line)) {
-        // Transforme la ligne en un flux de chaînes
-        std::istringstream ss(line);
-        std::string date;
-        float rate;
-        char delimiter;
-
-        // Lit la date et le taux de change depuis la ligne
-        ss >> date >> delimiter >> rate;
-
-        // Ajoute le taux de change au conteneur exchangeRates en utilisant la date comme clé
-        exchangeRates[date] = rate;
+    std::ifstream file(filename.c_str());
+    if (!file) {
+        std::cout << "Error: could not open exchange rates file." << std::endl;
+        return;
     }
+    std::cout << "Exchange rates file opened successfully." << std::endl;
+    
+    std::string line, date_str, rate_str;
+    float rate;
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        getline(ss, date_str, ',');
+        getline(ss, rate_str);
+        rate = atof(rate_str.c_str());
+        //if (rate <= 0) {
+       //     std::cout << "Error: invalid exchange rate (" << rate << ") on line: " << line << std::endl;
+       //     continue;
+       // }
+        exchangeRates[date_str] = rate;
+    }
+    
+    //std::map<std::string, float>::iterator it;
+    //for (it = exchangeRates.begin(); it != exchangeRates.end(); it++) {
+    //    std::cout << it->first << " => " << it->second << std::endl;
+   // }
 }
 
-// Évalue les valeurs à partir d'un fichier et affiche les résultats
+
 void BitcoinExchange::evaluateValues(const std::string &filename) {
-    // Ouvre le fichier en lecture
-    std::ifstream file(filename);
+    std::ifstream inputFile(filename);
+    if (!inputFile.is_open()) {
+        std::cout << "Error: could not open file." << std::endl;
+        return;
+    }
+
     std::string line;
+    getline(inputFile, line); // skip header line
 
-    // Ignore la première ligne (en-tête)
-    std::getline(file, line);
-
-    // Lit chaque ligne restante dans le fichier
-    while (std::getline(file, line)) {
-        // Transforme la ligne en un flux de chaînes
-        std::istringstream ss(line);
+    std::regex dateRegex("^\\d{4}-\\d{2}-\\d{2}$");
+    while (getline(inputFile, line)) {
+        std::istringstream iss(line);
         std::string date;
         float value;
-        char delimiter;
-
-        // Lit la date, le délimiteur et la valeur depuis la ligne
-        ss >> date >> delimiter >> value;
-
-        // Vérifie si la date est au bon format "année-mois-jour" et si le délimiteur est '|'
-        if (date.size() != 10 || date[4] != '-' || date[7] != '-' || delimiter != '|') {
+        char separator;
+        if (!(iss >> date >> separator >> value)) {
             std::cout << "Error: bad input => " << line << std::endl;
             continue;
         }
-
-        // Recherche le taux de change associé à la date dans le conteneur exchangeRates
-        std::map<std::string, float>::iterator it = exchangeRates.find(date);
-
-        // Vérifie si la date est présente dans la base de données
-        if (it == exchangeRates.end()) {
-            std::cout << "Error: date not found in exchange rates database" << std::endl;
+        if (!regex_match(date, dateRegex)) {
+            std::cout << "Error: bad input => " << line << std::endl;
+            continue;
         }
-        // Vérifie si la valeur est un nombre positif
-        else if (value < 0) {
-            std::cout << "Error: not a positive number" << std::endl;
-        }
-        // Vérifie si la valeur est inférieure ou égale à 1000
-        else if (value > 1000) {
+        if (value > 1000) {
             std::cout << "Error: too large a number" << std::endl;
+            continue;
         }
-        // Si toutes les vérifications sont valides, multiplie la valeur par le taux de change associé à la date et affiche le résultat
-        else {
-            std::cout << date << " => " << value << " = " << value * it->second << std::endl;
+        if (value  < 0) {
+            std::cout << "Error: not a positive number." << std::endl;
+            continue;
         }
+        std::map<std::string, float>::iterator it = exchangeRates.find(date);
+        if (it != exchangeRates.end()) {
+            float exchangeRate = it->second;
+            std::cout << date << " => " << value << " = " << value * exchangeRate << std::endl;
+            continue;
+        }
+        //for (std::map<std::string, float>::iterator it = exchangeRates.begin(); it != exchangeRates.end(); ++it) {
+        //std::cout << it->first << " => " << it->second << std::endl;
+        //}
     }
 }
