@@ -6,7 +6,7 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 15:50:38 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/07 16:08:53 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/15 10:56:04 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " EXPRESSION" << std::endl;
+        std::cerr << "Usage: " << argv[0] << "Arguments expression" << std::endl;
         return 1;
     }
     RPN rpn(argv[1]);
