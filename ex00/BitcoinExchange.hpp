@@ -6,7 +6,7 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:16:36 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/14 15:00:51 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/15 09:24:54 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ public:
 
     // Évalue les valeurs à partir d'un autre fichier
     void evaluateValues(const std::string &filename);
-
+    char detectSeparator(std::ifstream &file);
 private:
     // Un conteneur qui stocke les taux de change sous forme de clé (date) et valeur (taux)
     std::map<std::string, float> exchangeRates;

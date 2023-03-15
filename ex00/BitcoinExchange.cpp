@@ -6,7 +6,7 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:16:24 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/14 16:59:26 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/15 10:06:50 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,63 @@ BitcoinExchange::BitcoinExchange() {
 BitcoinExchange::~BitcoinExchange() {
 }
 
-
 void BitcoinExchange::loadExchangeRates(const std::string &filename) {
+    std::ifstream file(filename.c_str());
+    if (!file) {
+        std::cout << "Error: could not open exchange rates file." << std::endl;
+        return;
+    }
+    std::cout << "Exchange rates file opened successfully." << std::endl;
+
+    std::string line, date_str, rate_str;
+    float rate;
+    char separator = detectSeparator(file);
+    if (separator == ',') {
+        while (getline(file, line)) {
+            std::stringstream ss(line);
+            getline(ss, date_str, ',');
+            getline(ss, rate_str);
+            rate = atof(rate_str.c_str());
+            exchangeRates[date_str] = rate;
+        }
+    } else if (separator == '|') {
+        while (getline(file, line)) {
+            std::stringstream ss(line);
+            getline(ss, date_str, '|');
+            getline(ss, rate_str);
+            rate = atof(rate_str.c_str());
+            exchangeRates[date_str] = rate;
+        }
+    } else if (separator == ';') {
+        while (getline(file, line)) {
+            std::stringstream ss(line);
+            getline(ss, date_str, ';');
+            getline(ss, rate_str);
+            rate = atof(rate_str.c_str());
+            exchangeRates[date_str] = rate;
+        }
+    } else {
+        std::cout << "Error: unsupported separator character." << std::endl;
+    }
+}
+
+char BitcoinExchange::detectSeparator(std::ifstream &file) {
+    char separator = '\0';
+    std::string line;
+    if (getline(file, line)) {
+        if (line.find(',') != std::string::npos) {
+            separator = ',';
+        } else if (line.find('|') != std::string::npos) {
+            separator = '|';
+        } else if (line.find(';') != std::string::npos) {
+            separator = ';';
+        }
+    }
+    file.seekg(0, file.beg);
+    return separator;
+}
+
+/**void BitcoinExchange::loadExchangeRates(const std::string &filename) {
     std::ifstream file(filename.c_str());
     if (!file) {
         std::cout << "Error: could not open exchange rates file." << std::endl;
@@ -53,7 +108,7 @@ void BitcoinExchange::loadExchangeRates(const std::string &filename) {
     //for (it = exchangeRates.begin(); it != exchangeRates.end(); it++) {
     //    std::cout << it->first << " => " << it->second << std::endl;
    // }
-}
+}*/
 
 
 void BitcoinExchange::evaluateValues(const std::string &filename) {
@@ -88,14 +143,19 @@ void BitcoinExchange::evaluateValues(const std::string &filename) {
             std::cout << "Error: not a positive number." << std::endl;
             continue;
         }
-        std::map<std::string, float>::iterator it = exchangeRates.find(date);
-        if (it != exchangeRates.end()) {
-            float exchangeRate = it->second;
-            std::cout << date << " => " << value << " = " << value * exchangeRate << std::endl;
+
+        std::map<std::string, float>::iterator it = exchangeRates.lower_bound(date);
+        if (it == exchangeRates.end()) {
+            std::cout << "Error: date " << date << " is after the latest date in the exchange rates file." << std::endl;
             continue;
+        } else if (it == exchangeRates.begin() && date < it->first) {
+            std::cout << "Error: date " << date << " is prior to the earliest date in the exchange rates file." << std::endl;
+            continue;
+        } else if (date < it->first) {
+            --it;
         }
-        //for (std::map<std::string, float>::iterator it = exchangeRates.begin(); it != exchangeRates.end(); ++it) {
-        //std::cout << it->first << " => " << it->second << std::endl;
-        //}
+
+        float exchangeRate = it->second;
+        std::cout << date << " => " << value << " = " << value * exchangeRate << std::endl;
     }
 }
