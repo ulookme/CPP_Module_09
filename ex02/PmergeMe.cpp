@@ -6,7 +6,7 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 16:51:02 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/07 20:31:29 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/15 08:29:27 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ void PmergeMe::sortWithVector() {
 
 void PmergeMe::sortWithList() {
   // Afficher la séquence avant le tri
-  std::cout << "Before : ";
+  //std::cout << "Before : ";
   std::list<int>::iterator it;
   for (it = list_nums_.begin(); it != list_nums_.end(); it++) {
-    std::cout << *it << " ";
+   // std::cout << *it << " ";
   }
-  std::cout << std::endl;
+  //std::cout << std::endl;
 
   // Obtenir le temps actuel avant le tri
   std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
@@ -69,11 +69,11 @@ void PmergeMe::sortWithList() {
   std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
 
   // Afficher la séquence après le tri
-  std::cout << "After : ";
+  //std::cout << "After : ";
   for (it = list_nums_.begin(); it != list_nums_.end(); it++) {
-    std::cout << *it << " ";
+   // std::cout << *it << " ";
   }
-  std::cout << std::endl;
+  //std::cout << std::endl;
 
   // Calculer la durée du tri
   long long duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
