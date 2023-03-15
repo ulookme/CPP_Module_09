@@ -6,7 +6,7 @@
 /*   By: chajjar <chajjar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 14:16:24 by chajjar           #+#    #+#             */
-/*   Updated: 2023/03/15 10:06:50 by chajjar          ###   ########.fr       */
+/*   Updated: 2023/03/15 10:14:31 by chajjar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,16 +146,19 @@ void BitcoinExchange::evaluateValues(const std::string &filename) {
 
         std::map<std::string, float>::iterator it = exchangeRates.lower_bound(date);
         if (it == exchangeRates.end()) {
-            std::cout << "Error: date " << date << " is after the latest date in the exchange rates file." << std::endl;
-            continue;
-        } else if (it == exchangeRates.begin() && date < it->first) {
-            std::cout << "Error: date " << date << " is prior to the earliest date in the exchange rates file." << std::endl;
-            continue;
-        } else if (date < it->first) {
+            // Date is after the latest date in exchangeRates
             --it;
+            std::cout << it->first << " => " << value << " = " << value * it->second << std::endl;
+        } else if (it == exchangeRates.begin() && date < it->first) {
+            // Date is before the earliest date in exchangeRates
+            std::cout << "Error: date " << date << " is prior to the creation of Bitcoin" << std::endl;
+        } else if (date < it->first) {
+            // Date is between two dates in exchangeRates
+            --it;
+            std::cout << it->first << " => " << value << " = " << value * it->second << std::endl;
+        } else {
+            // Date is in exchangeRates
+            std::cout << it->first << " => " << value << " = " << value * it->second << std::endl;
         }
-
-        float exchangeRate = it->second;
-        std::cout << date << " => " << value << " = " << value * exchangeRate << std::endl;
     }
 }
