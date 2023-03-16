@@ -25,7 +25,7 @@ int RPN::calculate() {
         } else if (!std::isspace(c))  {
             if (stk.size() < 2) {
                 std::cerr << "Error" << std::endl;
-                return 0;
+                exit(1);
             }
             // Sinon, il s'agit d'un opérateur.
             // Les deux derniers nombres sur la pile sont dépilés.
@@ -51,7 +51,7 @@ int RPN::calculate() {
             default:
                 // Si le caractère n'est ni un chiffre ni un opérateur valide, un message d'erreur est affiché.
                 std::cerr << "Error: Invalid operator '" << c << "'" << std::endl;
-                return 0;
+                exit(1);
             }
         }
     }
