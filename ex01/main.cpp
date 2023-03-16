@@ -22,5 +22,8 @@ int main(int argc, char *argv[]) {
     if (result != 0) {
         std::cout << result << std::endl;
     }
+    else
+        std::cout << '0' << std::endl;
+        
     return 0;
 }
