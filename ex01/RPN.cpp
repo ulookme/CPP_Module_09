@@ -59,7 +59,7 @@ int RPN::calculate() {
     // Si la pile ne contient pas exactement un nombre, cela signifie que l'expression est invalide.
     if (stk.size() != 1) {
         std::cerr << "Error: Invalid expression" << std::endl;
-        return 0;
+        exit(1);
     }
 
     // Le résultat final est le nombre sur le dessus de la pile.
